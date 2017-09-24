@@ -1,0 +1,11 @@
+if $COLORTERM == "xfce4-terminal":
+	$TERM = "xterm-256color"
+$PATH.append("$HOME/bin")
+$GOPATH = "$HOME/projects/go"
+$EDITOR = "emacs -nw"
+xontrib load prompt_ret_code
+xontrib load apt_tabcomplete
+# currently borked
+#xontrib load powerline
+# see: https://developer.atlassian.com/blog/2016/02/best-way-to-store-dotfiles-git-bare-repo/
+aliases["config"] = "/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME"
