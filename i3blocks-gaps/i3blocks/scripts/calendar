@@ -1,0 +1,11 @@
+#!/bin/bash
+
+# open calendar on click
+if [ "$BLOCK_BUTTON" = "1" ]; then
+	orage &
+fi
+
+#output date and time
+echo $(date +"<span weight='bold'>%A</span>, %B %d %I:%M%P")
+
+exit 0
