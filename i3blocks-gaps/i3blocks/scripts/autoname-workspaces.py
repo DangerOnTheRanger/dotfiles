@@ -30,7 +30,7 @@ FA_FIREFOX = ''
 FA_MUSIC = ''
 FA_PICTURE_O = ''
 FA_SPOTIFY = ''
-FA_TERMINAL = ''
+FA_TERMINAL = ''
 FA_VIM = ''
 FA_QGIS = ''
 FA_HANGOUTS = ''
@@ -45,11 +45,13 @@ WINDOW_ICONS = {
     'xfce4-terminal': FA_TERMINAL,
     'google-chrome': FA_CHROME,
     'chromium': FA_CHROME,
+    'discord': FA_HANGOUTS,
     'subl': FA_CODE,
     'subl3': FA_CODE,
     'atom': FA_CODE,
     'emacs': FA_CODE,
     'emacs24': FA_CODE,
+    'emacs25': FA_CODE,
     'quodlibet': FA_MUSIC,
     'mpv': FA_MPV,
     'spotify': FA_SPOTIFY,
@@ -93,13 +95,20 @@ def xprop(win_id, property):
         return None
 
 def icon_for_window(window):
+    # hack to give ranger a custom icon
+    cmd_props = xprop(window.window, 'WM_COMMAND') 
+    if xprop(window.window, 'WM_NAME') == ['ranger']:
+        return FA_FILES_O
+    # hack for ncmpcpp
+    elif cmd_props is not None and 'ncmpcpp' in cmd_props:
+        return FA_MUSIC
     classes = xprop(window.window, 'WM_CLASS')
     if classes != None and len(classes) > 0:
         for cls in classes:
             if cls in WINDOW_ICONS:
                 return WINDOW_ICONS[cls]
         print('No icon available for window with classes: %s' % str(classes))
-    return '*'
+    return ''
 
 # renames all workspaces based on the windows present
 def rename():

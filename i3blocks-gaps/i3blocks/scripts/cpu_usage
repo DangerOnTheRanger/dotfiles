@@ -49,7 +49,7 @@ printf "%.${decimals}f%%   \n", $cpu_usage;
 printf "%.${decimals}f%%\n", $cpu_usage;
 
 if(defined $ENV{'BLOCK_BUTTON'} && $ENV{'BLOCK_BUTTON'} == "1") {
-	system("xfce4-taskmanager &");
+	system("urxvt -e htop &");
 }
 
 # Print color, if needed

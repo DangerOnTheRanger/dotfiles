@@ -3,6 +3,16 @@
 (add-to-list 'package-archives
              '("melpa" . "https://melpa.org/packages/")
              '("melpa-stable" . "https://stable.melpa.org/packages/"))
+;; orgmode stuff
+(add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
+(global-set-key "\C-cl" 'org-store-link)
+(global-set-key "\C-ca" 'org-agenda)
+(global-set-key "\C-cc" 'org-capture)
+(global-set-key "\C-cb" 'org-iswitchb)
+(add-hook 'org-mode-hook (lambda ()
+                            (setq buffer-face-mode-face '(:family "Hack"))
+                            (buffer-face-mode)))
+;;
 (when (< emacs-major-version 24)
   (add-to-list 'package-archives '("gnu" . "http://elpa.gnu.org/packages/")))
 ;;(defun on-after-init ()
@@ -33,6 +43,9 @@
    (quote
 	("0b6645497e51d80eda1d337d6cabe31814d6c381e69491931a688836c16137ed" "e681c4fc684a543ce97c2d55082c6585182c0089f605dc9a5fe193870f03edc6" "6916fa929b497ab630e23f2a4785b3b72ce9877640ae52088c65c00f8897d67f" "cb18233197cedab557c70d171b511bed49cc702f428750925280090c31498bd2" "91fba9a99f7b64390e1f56319c3dbbaed22de1b9676b3c73d935bf62277b799c" "b6db49cec08652adf1ff2341ce32c7303be313b0de38c621676122f255ee46db" "e254f8e18ba82e55572c5e18f3ac9c2bd6728a7e500f6cc216e0c6f6f8ea7003" "890d09dcc8d2326e98eee74b307b2cc42f07ab7701bcff521e6152aa3e08f7a8" "06fc6014871028d24b4e03db24b9efee48bd73dce0afdc15e9124f09fab64afa" "294834baa9ca874795a3181cce7aaf228b1e3fb3899587ffd3ae7546de328c90" "b6d649c9f972b491686e7fa634535653e6222c1faca1ab71b3117854470a79ae" "f21caace402180ab3dc5157d2bb843c4daafbe64aadc362c9f4558ac17ce43a2" "e033c4abd259afac2475abd9545f2099a567eb0e5ec4d1ed13567a77c1919f8f" "e24679edfdea016519c0e2d4a5e57157a11f928b7ef4361d00c23a7fe54b8e01" "b4ec581daad15aa7020b722523dc6bcea850bfbdbe31bfeb11c45ea51899bd75" "e8e744a1b0726814ac3ab86ad5ccdf658b9ff1c5a63c4dc23841007874044d4a" "09669536b4a71f409e7e2fd56609cd7f0dff2850d4cbfb43916cc1843c463b80" "db9feb330fd7cb170b01b8c3c6ecdc5179fc321f1a4824da6c53609b033b2810" "f2503f0a035c2122984e90eb184185769ee665de5864edc19b339856942d2d2d" "cdfb22711f64d0e665f40b2607879fcf2607764b2b70d672ddaa26d2da13049f" "bf81a86f9cfa079a7bb9841bc6ecf9a2e8999b85e4ae1a4d0138975921315713" default)))
  '(inhibit-startup-screen t)
+ '(package-selected-packages
+   (quote
+	(racket-mode undo-tree spaceline markdown-mode magit go-mode eyebrowse deft column-marker base16-theme)))
  '(scroll-bar-mode nil)
  '(tab-width 4)
  '(tool-bar-mode nil))
@@ -41,16 +54,29 @@
       (lambda ()
         (setq tab-width 4)
         (setq python-indent 4)))
+;; powerline
+(require 'powerline)
+(require 'spaceline-config)
+(spaceline-spacemacs-theme)
+;; undo tree
+(global-undo-tree-mode)
+(global-set-key (kbd "C-z") 'undo)
+(global-set-key (kbd "C-S-z") 'undo-tree-redo)
+;; windmove bindings
+;; might need to change for terminal support, see: https://www.emacswiki.org/emacs/WindMove
+(windmove-default-keybindings)
+;; eyebrowse setup
+(eyebrowse-mode t)
+(setq eyebrowse-new-workspace t)
 ;; default font
 (add-to-list 'default-frame-alist '(font . "Fira Code" ))
-;; fira code workaround (see:https://github.com/tonsky/FiraCode/wiki/Setting-up-Emacs)
+;; fira code workaround (see: https://github.com/tonsky/FiraCode/wiki/Setting-up-Emacs)
 ;;; Fira code
 ;; This works when using emacs --daemon + emacsclient
 (add-hook 'after-make-frame-functions (lambda (frame) (set-fontset-font t '(#Xe100 . #Xe16f) "Fira Code Symbol")))
 ;; This works when using emacs without server/client
 (set-fontset-font t '(#Xe100 . #Xe16f) "Fira Code Symbol")
 ;; I haven't found one statement that makes both of the above situations work, so I use both for now
-
 (defconst fira-code-font-lock-keywords-alist
   (mapcar (lambda (regex-char-pair)
             `(,(car regex-char-pair)
@@ -176,3 +202,9 @@
 
 (add-hook 'prog-mode-hook
           #'add-fira-code-symbol-keywords)
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )

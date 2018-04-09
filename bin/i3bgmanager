@@ -1,0 +1,58 @@
+#!/usr/bin/env python3
+import os
+import subprocess
+import i3ipc
+
+FEH_COMMAND = ["feh", "--bg-fill"]
+WALLPAPER_DIR = "~/Pictures/wallpapers"
+WALLPAPERS = ["shirou.png",
+              "saber.png",
+              "rei.png",
+              "nagato.png",
+              "ryougi.png",
+              "flcl.png",
+              "homura.png",
+              "ryuko3.png",
+              "kiritsugu.png",
+              "archer2.png"]
+left_monitor_wallpaper = WALLPAPERS[1]
+LEFT_MONITOR_NAME = "HDMI-1"
+right_monitor_wallpaper = WALLPAPERS[0]
+RIGHT_MONITOR_NAME = "eDP-1"
+
+
+def refresh_wallpapers():
+    full_path_left = os.path.expanduser(os.path.join(WALLPAPER_DIR, left_monitor_wallpaper))
+    full_path_right = os.path.expanduser(os.path.join(WALLPAPER_DIR, right_monitor_wallpaper))
+    subprocess.run(FEH_COMMAND + [full_path_right, full_path_left])
+
+
+def update_left_wallpaper(workspace_num):
+    global left_monitor_wallpaper
+    left_monitor_wallpaper = WALLPAPERS[workspace_num - 1]
+    refresh_wallpapers()
+
+
+def update_right_wallpaper(workspace_num):
+    global right_monitor_wallpaper
+    right_monitor_wallpaper = WALLPAPERS[workspace_num - 1]
+    refresh_wallpapers()
+
+
+def on_workspace_switch(ipc, event_info):
+    if event_info.current:
+        output_list = ipc.get_outputs()
+        active_workspace = event_info.current.num
+        for workspace in ipc.get_workspaces():
+            if workspace["num"] == active_workspace:
+                if workspace["output"] == LEFT_MONITOR_NAME:
+                    update_left_wallpaper(active_workspace)
+                    break
+                elif workspace["output"] == RIGHT_MONITOR_NAME:
+                    update_right_wallpaper(active_workspace)
+                    break
+
+refresh_wallpapers()
+connection = i3ipc.Connection()
+connection.on("workspace::focus", on_workspace_switch)
+connection.main()

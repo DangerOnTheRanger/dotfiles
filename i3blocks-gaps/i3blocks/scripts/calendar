@@ -2,7 +2,7 @@
 
 # open calendar on click
 if [ "$BLOCK_BUTTON" = "1" ]; then
-	orage &
+	urxvt -e "htop" &
 fi
 
 #output date and time
